@@ -833,25 +833,27 @@ public abstract class PluginCore extends JavaPlugin{
 		
 		int			face = block.getData() & 0x7;
 		
-		if(face == 5) return(block.getRelative(BlockFace.NORTH));
-		if(face == 3) return(block.getRelative(BlockFace.EAST));
-		if(face == 4) return(block.getRelative(BlockFace.SOUTH));
-		if(face == 2) return(block.getRelative(BlockFace.WEST));
+		if(face == BlockUtil.faceList[0]) return(block.getRelative(BlockFace.NORTH));
+		if(face == BlockUtil.faceList[1]) return(block.getRelative(BlockFace.EAST));
+		if(face == BlockUtil.faceList[2]) return(block.getRelative(BlockFace.SOUTH));
+		if(face == BlockUtil.faceList[3]) return(block.getRelative(BlockFace.WEST));
 		
 		return(null);
 	}
 	
 	
 	public static Block getTrapDoorAttachedBlock(Block block){
-		if(block.getTypeId() != 96) return(null);
+		int			type = block.getTypeId();
+
+		if(type != Material.TRAP_DOOR.getId() && type != Material.IRON_TRAPDOOR.getId()) return(null);
 		
 		
 		int			face = block.getData() & 0x3;
 		
-		if(face == 3) return(block.getRelative(BlockFace.NORTH));
-		if(face == 1) return(block.getRelative(BlockFace.EAST));
-		if(face == 2) return(block.getRelative(BlockFace.SOUTH));
-		if(face == 0) return(block.getRelative(BlockFace.WEST));
+		if(face == BlockUtil.attachList[0]) return(block.getRelative(BlockFace.NORTH));
+		if(face == BlockUtil.attachList[1]) return(block.getRelative(BlockFace.EAST));
+		if(face == BlockUtil.attachList[2]) return(block.getRelative(BlockFace.SOUTH));
+		if(face == BlockUtil.attachList[3]) return(block.getRelative(BlockFace.WEST));
 		
 		return(null);
 	}
@@ -870,10 +872,10 @@ public abstract class PluginCore extends JavaPlugin{
 		switch(face){
 			case 0: return(BlockFace.DOWN);
 			case 1: return(BlockFace.UP);
-			case 2: return(BlockFace.EAST);
-			case 3: return(BlockFace.WEST);
-			case 4: return(BlockFace.NORTH);
-			case 5: return(BlockFace.SOUTH);
+			case 2: return(BlockFace.NORTH);
+			case 3: return(BlockFace.SOUTH);
+			case 4: return(BlockFace.WEST);
+			case 5: return(BlockFace.EAST);
 		}
 		
 		return(BlockFace.SELF);
