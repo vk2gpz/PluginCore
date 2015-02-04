@@ -6,7 +6,8 @@ import org.bukkit.block.BlockFace;
 public class BlockUtil {
 	// Facings are reversed as we are attaching signs to blocks.
 	public static byte faceList[] = { 5, 3, 4, 2 };     // SOUTH, WEST, NORTH, EAST
-	public static byte attachList[] = { 3, 1, 2, 0 };     // SOUTH, WEST, NORTH, EAST	
+	public static byte attachList[] = { 1, 2, 0, 3 };     // SOUTH, WEST, NORTH, EAST
+	//public static byte attachList[] = { 3, 1, 2, 0 };     // SOUTH, WEST, NORTH, EAST		
 	static {
 		if (BlockFace.NORTH.getModX() != -1) {
 			// Post CraftBukkit 2502
