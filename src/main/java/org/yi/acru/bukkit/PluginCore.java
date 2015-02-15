@@ -41,6 +41,7 @@ import com.platymuus.bukkit.permissions.Group;
 import de.bananaco.bpermissions.api.WorldManager;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import org.anjocaido.groupmanager.GroupManager;
+import org.bukkit.Bukkit;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 
@@ -181,8 +182,9 @@ public abstract class PluginCore extends JavaPlugin{
 		log.info("Number of linked economy plugins: " + useExternalEconomy);
 		
 		if(linkSuperPerms.isEnabled()){
-			Player[]	players = getServer().getOnlinePlayers();
-			
+			//Player[]	players = getServer().getOnlinePlayers();
+                        Player[] players = Bukkit.getOnlinePlayers().toArray(new Player[0]);
+
 			log.info("Superperms is available, " + players.length + " players online.");
 			
 			for(Player player: players){
@@ -720,8 +722,9 @@ public abstract class PluginCore extends JavaPlugin{
 		if(message == null) return;
 		if(message.isEmpty()) return;
 		
-		Player[]	players = getServer().getOnlinePlayers();
-		
+		//Player[]	players = getServer().getOnlinePlayers();
+		Player[] players = Bukkit.getOnlinePlayers().toArray(new Player[0]);
+
 		if(target.charAt(0) == '['){
 			// For groups.
 			for(int x = 0; x < players.length; ++x){
@@ -745,7 +748,9 @@ public abstract class PluginCore extends JavaPlugin{
 	
 	public boolean playerOnline(String truncName){
 		String		text = truncName.replaceAll("(?i)\u00A7[0-F]", "");
-		Player[]	players = getServer().getOnlinePlayers();
+		//Player[]	players = getServer().getOnlinePlayers();
+                Player[] players = Bukkit.getOnlinePlayers().toArray(new Player[0]);
+
 		int			length;
 		
 		for(int x = 0; x < players.length; ++x){
