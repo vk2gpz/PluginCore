@@ -4,30 +4,31 @@
 	<groupId>org.yi.acru.bukkit	</groupId>
 	<artifactId>PluginCore</artifactId>
 	<packaging>jar</packaging>
-	<version>1.4.0</version>
+	<version>1.5.0</version>
 	<name>PluginCore</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>LATEST</version>
-	      <scope>system</scope>
-		  <systemPath>${basedir}/lib/spigot-1.8-R0.1-SNAPSHOT.jar</systemPath>
-<!--		  
-			<type>jar</type>
-			<scope>compile</scope>
--->			
-		</dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.8-R0.1-SNAPSHOT</version>
+            <optional>true</optional>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>LATEST</version>
+            <optional>true</optional>
+        </dependency>
 		<dependency>
 			<groupId>com.gmail.nossr50</groupId>
 			<artifactId>mcMMO</artifactId>
@@ -71,41 +72,6 @@
 			<systemPath>${basedir}/lib/SimpleClans.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>org.anjocaido.groupmanager</groupId>
-			<artifactId>GroupManager</artifactId>
-			<version>LATEST</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/EssentialsGroupManager.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>ru.tehkode.permissions</groupId>
-			<artifactId>PermissionsEx</artifactId>
-			<version>LATEST</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/PermissionsEx.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>de.bananaco.permissions</groupId>
-			<artifactId>bPermissions</artifactId>
-			<version>LATEST</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/bPermissions.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.platymuus.bukkit.permissions</groupId>
-			<artifactId>PermissionsBukkit</artifactId>
-			<version>LATEST</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/PermissionsBukkit.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.nijikokun.bukkit</groupId>
-			<artifactId>Permissions</artifactId>
-			<version>LATEST</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/Permissions.jar</systemPath>
-		</dependency>
-		<dependency>
 			<groupId>com.nijikokun.register</groupId>
 			<artifactId>Reister</artifactId>
 			<version>LATEST</version>
@@ -145,9 +111,13 @@
 		</resources>
 	</build>
 	<repositories>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public</url>
-		</repository>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>vault-repo</id>
+            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+        </repository>
 	</repositories>
 </project>

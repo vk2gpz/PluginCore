@@ -9,12 +9,15 @@ package org.yi.acru.bukkit;
 
 
 // Imports.
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.permission.Permission;
+import net.sacredlabyrinth.phaed.simpleclans.Clan;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -23,26 +26,19 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import org.yi.acru.bukkit.PluginCoreLink.LinkType;
 
 import com.gmail.nossr50.datatypes.PlayerProfile;
 import com.griefcraft.lwc.LWC;
 import com.griefcraft.model.Protection;
-import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.register.payment.Method.MethodAccount;
 import com.nijikokun.register.payment.Methods;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
-import com.platymuus.bukkit.permissions.Group;
-import de.bananaco.bpermissions.api.WorldManager;
-import net.sacredlabyrinth.phaed.simpleclans.Clan;
-import org.anjocaido.groupmanager.GroupManager;
-import org.bukkit.Bukkit;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 
 
@@ -64,12 +60,8 @@ public abstract class PluginCore extends JavaPlugin{
 	//private static String					lastEconomyAccount = "lockette.unknown";
 	
 	private static List<PluginCoreLink>		linkList = null;
-	private static PluginCoreLink			linkSuperPerms = null;
-	private static PluginCoreLink			linkGroupManager = null;
-	
-	private static PluginCoreLink			linkPermsBukkit = null;
-	private static PluginCoreLink			linkPermissionsEx = null;
-	private static PluginCoreLink			linkBPermissions = null;
+	//private static PluginCoreLink			linkSuperPerms = null;
+	private static PluginCoreLink			linkVaultPermissions = null;
 	private static PluginCoreLink			linkTowny = null;
 	private static PluginCoreLink			linkSimpleClans = null;
 	private static PluginCoreLink			linkMcmmo = null;
@@ -77,11 +69,6 @@ public abstract class PluginCore extends JavaPlugin{
 	private static PluginCoreLink			linkLWC = null;
 	//private static PluginCoreLink			linkIConomy = null;
 	private static PluginCoreLink			linkRegister = null;
-	
-	private static PluginCoreLink			linkPermissions = null;
-	private static boolean					permissionsWorld = false;
-	
-	
 	
 	//********************************************************************************
 	// Constructors and methods.
@@ -130,14 +117,7 @@ public abstract class PluginCore extends JavaPlugin{
 		
 		linkList = new ArrayList<PluginCoreLink>(10);
 		
-		// A special link for built-in permissions.
-		linkSuperPerms = linkInternalPerms();
-		
 		// Link to various plugins, if available.
-		linkGroupManager = linkExternalPlugin("GroupManager", LinkType.GroupManager);
-		linkPermsBukkit = linkExternalPlugin("PermissionsBukkit", LinkType.GROUPS_PERMISSIONS);
-		linkPermissionsEx = linkExternalPlugin("PermissionsEx", LinkType.GROUPS_PERMISSIONS);
-		linkBPermissions = linkExternalPlugin("bPermissions", LinkType.GROUPS_PERMISSIONS);
 		linkTowny = linkExternalPlugin("Towny", LinkType.GROUPS_ZONES);
 		linkSimpleClans = linkExternalPlugin("SimpleClans", LinkType.GROUPS);
 		linkMcmmo = linkExternalPlugin("mcMMO", LinkType.GROUPS);
@@ -145,8 +125,8 @@ public abstract class PluginCore extends JavaPlugin{
 		linkLWC = linkExternalPlugin("LWC", LinkType.ZONES);
 		//linkIConomy = linkExternalPlugin("iConomy", LinkType.ECONOMY);
 		linkRegister = linkExternalPlugin("Register", LinkType.ECONOMY);
-		// Permissions classic last.
-		linkPermissions = linkExternalPlugin("Permissions", LinkType.Permissions);
+		// Permissions Vault last.
+		linkVaultPermissions = linkExternalPlugin("Vault", LinkType.Permissions);
 		
 		if(usingExternalPermissions()) log.info("[" + getDescription().getName() + "] Using linked plugin for admin permissions.");
 		else log.info("[" + getDescription().getName() + "] Using ops file for admin permissions.");
@@ -181,52 +161,24 @@ public abstract class PluginCore extends JavaPlugin{
 		log.info("Number of linked zone plugins: " + useExternalZones);
 		log.info("Number of linked economy plugins: " + useExternalEconomy);
 		
-		if(linkSuperPerms.isEnabled()){
-			//Player[]	players = getServer().getOnlinePlayers();
-                        Player[] players = Bukkit.getOnlinePlayers().toArray(new Player[0]);
+		//Player[]	players = getServer().getOnlinePlayers();
+		Player[] players = Bukkit.getOnlinePlayers().toArray(new Player[0]);
 
-			log.info("Superperms is available, " + players.length + " players online.");
+		log.info("Using Bukkit permissions, " + players.length + " players online.");
 			
-			for(Player player: players){
-				log.info("Player: " + player.getName() + " has the following permissions:");
+		for(Player player: players){
+			log.info("Player: " + player.getName() + " has the following permissions:");
 				
-				Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
+			Set<PermissionAttachmentInfo> perms = player.getEffectivePermissions();
 				
-				for(PermissionAttachmentInfo perm: perms){
-					log.info("    " + perm.getPermission() + " = " + perm.getValue());
-				}
+			for(PermissionAttachmentInfo perm: perms){
+				log.info("    " + perm.getPermission() + " = " + perm.getValue());
 			}
 		}
-		else log.info("Superperms is unavailable.");
 	}
-	
 	
 	//********************************************************************************
 	// Start of external plugin linking section.
-	
-	
-	// Returns a special link holder class.
-	private PluginCoreLink linkInternalPerms(){
-		PluginCoreLink	link = new PluginCoreLink(this, null, LinkType.PERMISSIONS);
-		
-		try{
-			final Class<?>		args[] = {String.class};
-			
-			Player.class.getMethod("hasPermission", args);
-		}
-		catch(Throwable ex){
-			// Detected superperms not available.
-			return(link);
-		}
-		
-		// Set the appropriate flags.
-		//link.setLinked(true);
-		//++useExternalPermissions;	// Enable in specific plug-ins instead.
-		link.setEnabled(true);
-		//log.info("[" + getDescription().getName() + "] Superperms support enabled.");
-		return(link);
-	}
-	
 	
 	// Returns a special link holder class.
 	private PluginCoreLink linkExternalPlugin(String pluginName, LinkType handler){
@@ -308,10 +260,6 @@ public abstract class PluginCore extends JavaPlugin{
 			
 			// Handle specific plugin enables.
 			switch(link.getType()){
-			case GroupManager:
-				result = enableLinkGroupManager(link, enable, difference);
-				break;
-
 			case Permissions:
 				result = enableLinkPermissions(link, enable, difference);
 				break;
@@ -355,83 +303,20 @@ public abstract class PluginCore extends JavaPlugin{
 	
 	
 	// Enable handler for a specialized external plugin, returns true is successful.
-	protected boolean enableLinkGroupManager(PluginCoreLink link, boolean enable, int difference){
-		if(enable){
-			// We don't know if the static or instanced method is the one available, so...
-			try{
-				Method		getWho = GroupManager.class.getMethod("getWorldsHolder", (Class[]) null);
-				
-				link.setData(getWho.invoke(link.getGroupManager(), (Object[]) null));
-			}
-			catch(Throwable ex){
-				// Failed to load
-				return(false);
-			}
-		}
-		
-		// Loaded okay, set the appropriate flags for this plugin.
-		useExternalGroups += difference;
-		useExternalPermissions += difference;
-		link.setEnabled(enable);
-		return(true);
-	}
-	
-	
-	// Enable handler for a specialized external plugin, returns true is successful.
 	protected boolean enableLinkPermissions(PluginCoreLink link, boolean enable, int difference){
 		boolean		usePerms = true;
 		
-		if(linkBPermissions != null) if(linkBPermissions.isLinked()){
-			// Use the built in bridge only for groups.
-			usePerms = false;
-		}
-		
 		if(enable){
-			// Detect fake permissions.
-			try{	// GroupManager
-				Class.forName("org.anjocaido.groupmanager.permissions.NijikoPermissionsProxy");
-				link.setLinked(false);
-				return(false);
-			}
-			catch(Throwable ex){}
-			try{	// PermsBukkit
-				Class.forName("com.platymuus.bukkit.permcompat.PermissionHandler");
-				link.setLinked(false);
-				return(false);
-			}
-			catch(Throwable ex){}
-			try{	// PermissionsEx
-				Class.forName("ru.tehkode.permissions.compat.P2Group");
-				link.setLinked(false);
-				return(false);
-			}
-			catch(Throwable ex){}
-			//if(linkBPermissions.isLinked()){	// bPermissions (built in)
-				//link.setLinked(false);
-				//return(false);
-			//}
 			
-			
-			// Get permissions handler.
-			try{
-				link.setData(link.getPermissions().getHandler());
-			}
-			catch(Throwable ex){
-				// Failed to load
+			// Detect the vault permission system
+			if(Bukkit.getPluginManager().getPlugin("Vault") == null) {
 				return(false);
 			}
 			
-			
-			// Check if the world-based inGroup function is available.
-			permissionsWorld = false;
-			try{
-				final Class<?>		args[] = {String.class, String.class, String.class};
-				
-				PermissionHandler.class.getMethod("inGroup", args);
-				
-				permissionsWorld = true;
-			}
-			catch(Throwable ex){}
+			RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+	        if(rsp.getProvider() == null) {
+	        	return(false);
+	        }
 		}
 		
 
@@ -489,39 +374,6 @@ public abstract class PluginCore extends JavaPlugin{
 		int			end = groupName.length() - 1;
 		
 		if(end >= 2) if((groupName.charAt(0) == '[') && (groupName.charAt(end) == ']')){
-			// PermsBukkit first.
-			if(linkPermsBukkit.isEnabled()){
-				Group		group = linkPermsBukkit.getPermsBukkit().getGroup(groupName.substring(1, end));
-				
-				if(group != null){
-					List<Group>		membership = linkPermsBukkit.getPermsBukkit().getGroups(playerName);
-					
-					if(membership != null){
-						int			x, count = membership.size();
-						
-						for(x = 0; x < count; ++x){
-							if(membership.get(x).equals(group)){
-								return(true);
-							}
-						}
-					}
-				}
-			}
-			
-			if(linkPermissionsEx.isEnabled()){
-				result = PermissionsEx.getUser(playerName).inGroup(groupName.substring(1, end), world.getName());
-				if(result) return(true);
-			}
-			
-			if(linkBPermissions.isEnabled()){
-				result = WorldManager.getInstance().getWorld(world.getName()).getUser(playerName).hasGroupRecursive(groupName.substring(1, end).toLowerCase());
-				if(result) return(true);
-			}
-			
-			if(linkGroupManager.isEnabled()){
-				result = linkGroupManager.getWorldsHolder().getWorldPermissions(world.getName()).inGroup(playerName, groupName.substring(1, end));
-				if(result) return(true);
-			}
 			
 			if(linkTowny.isEnabled()){
 				try{
@@ -568,10 +420,9 @@ public abstract class PluginCore extends JavaPlugin{
 			}
 			
 			// Permissions classic last.
-			if(linkPermissions.isEnabled()){
-				if(permissionsWorld) result = linkPermissions.getPermissionHandler().inGroup(world.getName(), playerName, groupName.substring(1, end));
-				else result = linkPermissions.getPermissionHandler().inGroup(player.getWorld().getName(), playerName, groupName.substring(1, end));
-				if(result) return(true);
+			if(linkVaultPermissions.isEnabled()){
+				result = linkVaultPermissions.getVaultPermissions().playerInGroup(world.getName(), player, groupName.substring(1, end));
+				return(true);
 			}
 		}
 		
@@ -586,33 +437,7 @@ public abstract class PluginCore extends JavaPlugin{
 	public boolean hasPermission(World world, Player player, String permissionNode){
 		if(player == null) return(false);
 		
-		if(!usingExternalPermissions()){
-			if(player.isOp()) return(true);
-			return(false);
-		}
-		
-		// Use external permission plugins here.
-		
-		boolean		result = false;
-		
-		// Superperms first.
-		if(linkSuperPerms.isEnabled()) if(player != null){
-			result = player.hasPermission(permissionNode);
-			if(result) return(true);
-		}
-		
-		if(linkGroupManager.isEnabled()){
-			result = linkGroupManager.getWorldsHolder().getWorldPermissions(world.getName()).has(player, permissionNode);
-			if(result) return(true);
-		}
-		
-		// Permissions classic last.
-		if(linkPermissions.isEnabled()){
-			result = linkPermissions.getPermissionHandler().has(player, permissionNode);
-			if(result) return(true);
-		}
-		
-		return(false);
+		return player.hasPermission(permissionNode);
 	}
 	
 	
