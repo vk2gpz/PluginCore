@@ -9,18 +9,15 @@ package org.yi.acru.bukkit;
 
 
 //Imports.
+import net.milkbowl.vault.permission.Permission;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
-import org.anjocaido.groupmanager.GroupManager;
-import org.anjocaido.groupmanager.dataholder.worlds.WorldsHolder;
+
 import org.bukkit.plugin.Plugin;
 
 import com.gmail.nossr50.mcMMO;
 import com.griefcraft.lwc.LWCPlugin;
 import com.massivecraft.factions.P;
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 import com.palmergames.bukkit.towny.Towny;
-import com.platymuus.bukkit.permissions.PermissionsPlugin;
 
 
 public class PluginCoreLink{
@@ -30,7 +27,7 @@ public class PluginCoreLink{
 		NONE, GROUPS, PERMISSIONS, ZONES, ECONOMY,
 		GROUPS_PERMISSIONS, GROUPS_ZONES, PERMISSIONS_ZONES, GROUPS_PERMISSIONS_ZONES,
 		
-		GroupManager, Permissions;
+		Permissions;
 	}
 	
 	private boolean		linked, enabled;
@@ -81,9 +78,7 @@ public class PluginCoreLink{
 	}
 	//protected void setPlugin(Plugin target){plugin = target;}
 	
-	protected GroupManager getGroupManager(){return((GroupManager) linkedPlugin);}
-	protected Permissions getPermissions(){return((Permissions) linkedPlugin);}
-	protected PermissionsPlugin getPermsBukkit(){return((PermissionsPlugin) linkedPlugin);}
+	protected Permission getVaultPermissions(){return((Permission) linkedPlugin);}
 	protected Towny getTowny(){return((Towny) linkedPlugin);}
 	protected SimpleClans getSimpleClans(){return((SimpleClans) linkedPlugin);}
 	protected mcMMO getMcmmo(){return((mcMMO) linkedPlugin);}
@@ -94,7 +89,5 @@ public class PluginCoreLink{
 	// Data accessors.
 	
 	protected void setData(Object value){data = value;}
-	protected WorldsHolder getWorldsHolder(){return((WorldsHolder) data);}
-	protected PermissionHandler getPermissionHandler(){return((PermissionHandler) data);}
 }
 
