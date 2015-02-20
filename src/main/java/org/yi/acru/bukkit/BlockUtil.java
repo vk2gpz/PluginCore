@@ -74,7 +74,7 @@ public class BlockUtil {
 	
 	public static final int[] materialListChests = {
 		Material.CHEST.getId(),
-		Material.TRAPPED_CHEST.getId(),
+		Material.TRAPPED_CHEST.getId()
 	};
 
 	public static final int[] materialListFurnaces = {
@@ -133,7 +133,7 @@ public class BlockUtil {
 		Material.BIRCH_FENCE_GATE.getId(),	  
 		Material.DARK_OAK_FENCE_GATE.getId(),	  
 		Material.JUNGLE_FENCE_GATE.getId(),	  
-		Material.SPRUCE_FENCE_GATE.getId(),	  
+		Material.SPRUCE_FENCE_GATE.getId()	  
 	};
 	
 	public static final int[] materialListBad = {
