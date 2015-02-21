@@ -21,9 +21,6 @@ and needs the following Libraries: (Version used in brackets)
 * SimpleClans (2.3.4)
 * Towny (0.81)
 
-To compile against spigot1.8, you need to obtain your own copy of
-spigot.jar since it's no longer distributed in the form of .jar.
-
 This version now use Maven as the project management system.  In order
 to use PluginCore for other package like Lockette, do
 
