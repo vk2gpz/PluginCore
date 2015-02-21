@@ -21,7 +21,7 @@ and needs the following Libraries: (Version used in brackets)
 * SimpleClans (2.3.4)
 * Towny (0.81)
 
-This version now use Maven as the project management system.  In order
+This version now uses Maven as the project management system.  In order
 to use PluginCore for other package like Lockette, do
 
 mvn clean package install
