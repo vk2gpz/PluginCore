@@ -1,6 +1,7 @@
 
 PluginCore for Bukkit, written by Acru Jovia, updated by ElgarL and
 now mainteined by vk2gpz
+Unofficially maintained by Sycholic and Samistine of Spigot
 Distributed under the The Non-Profit Open Software License version 3.0 (NPOSL-3.0)
 http://www.opensource.org/licenses/NOSL3.0
 
@@ -20,10 +21,7 @@ and needs the following Libraries: (Version used in brackets)
 * SimpleClans (2.3.4)
 * Towny (0.81)
 
-To compile against spigot1.8, you need to obtain your own copy of
-spigot.jar since it's no longer distributed in the form of .jar.
-
-This version now use Maven as the project management system.  In order
+This version now uses Maven as the project management system.  In order
 to use PluginCore for other package like Lockette, do
 
 mvn clean package install
