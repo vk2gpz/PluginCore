@@ -4,7 +4,7 @@
 	<groupId>org.yi.acru.bukkit	</groupId>
 	<artifactId>PluginCore</artifactId>
 	<packaging>jar</packaging>
-	<version>1.4.0</version>
+	<version>1.4.1</version>
 	<name>PluginCore</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -14,13 +14,9 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>LATEST</version>
-	      <scope>system</scope>
-		  <systemPath>${basedir}/lib/spigot-1.8-R0.1-SNAPSHOT.jar</systemPath>
-<!--		  
+            <version>1.8.3-R0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
--->			
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -49,6 +45,7 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/Towny.jar</systemPath>
 		</dependency>
+<!--		
 		<dependency>
 			<groupId>com.massivecraft.factions</groupId>
 			<artifactId>Factions</artifactId>
@@ -56,6 +53,14 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/Factions.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>com.massivecraft.factions</groupId>
+			<artifactId>Factions</artifactId>
+			<version>LATEST</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/MCore/Factions.jar</systemPath>
+		</dependency>
+-->		
 		<dependency>
 			<groupId>net.sacredlabyrinth.Phaed.PreciousStones</groupId>
 			<artifactId>PreciousStones</artifactId>
@@ -148,6 +153,10 @@
 		<repository>
 			<id>bukkit-repo</id>
 			<url>http://repo.bukkit.org/content/groups/public</url>
+		</repository>
+		<repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
 </project>

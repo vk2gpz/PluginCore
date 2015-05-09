@@ -16,7 +16,8 @@ import org.bukkit.plugin.Plugin;
 
 import com.gmail.nossr50.mcMMO;
 import com.griefcraft.lwc.LWCPlugin;
-import com.massivecraft.factions.P;
+//import com.massivecraft.factions.P;
+//import com.massivecraft.factions.Factions;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.palmergames.bukkit.towny.Towny;
@@ -87,7 +88,10 @@ public class PluginCoreLink{
 	protected Towny getTowny(){return((Towny) linkedPlugin);}
 	protected SimpleClans getSimpleClans(){return((SimpleClans) linkedPlugin);}
 	protected mcMMO getMcmmo(){return((mcMMO) linkedPlugin);}
-	protected P getFactions(){return((P) linkedPlugin);}
+	protected Object getFactions(){
+		
+		return(linkedPlugin);
+	}
 	protected LWCPlugin getLWCPlugin(){return((LWCPlugin) linkedPlugin);}
 	
 	

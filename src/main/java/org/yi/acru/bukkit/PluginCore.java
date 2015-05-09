@@ -10,11 +10,13 @@ package org.yi.acru.bukkit;
 
 // Imports.
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -42,8 +44,6 @@ import de.bananaco.bpermissions.api.WorldManager;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import org.anjocaido.groupmanager.GroupManager;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
-
-
 
 public abstract class PluginCore extends JavaPlugin{
 	private static final String				coreVersion = "1.3.5";
@@ -181,9 +181,9 @@ public abstract class PluginCore extends JavaPlugin{
 		log.info("Number of linked economy plugins: " + useExternalEconomy);
 		
 		if(linkSuperPerms.isEnabled()){
-			Player[]	players = getServer().getOnlinePlayers();
+			Collection<Player> players = (Collection<Player>) getServer().getOnlinePlayers();
 			
-			log.info("Superperms is available, " + players.length + " players online.");
+			log.info("Superperms is available, " + players.size() + " players online.");
 			
 			for(Player player: players){
 				log.info("Player: " + player.getName() + " has the following permissions:");
@@ -225,9 +225,9 @@ public abstract class PluginCore extends JavaPlugin{
 		return(link);
 	}
 	
-	
 	// Returns a special link holder class.
 	private PluginCoreLink linkExternalPlugin(String pluginName, LinkType handler){
+
 		Plugin			plugin = getServer().getPluginManager().getPlugin(pluginName);
 		PluginCoreLink	link = new PluginCoreLink(this, plugin, handler);
 		
@@ -464,8 +464,7 @@ public abstract class PluginCore extends JavaPlugin{
 	private boolean inGroup(World world, Player player, String playerName, String groupName){
 		// Built in groups.
 		String		local;
-		
-		
+
 		if(groupName.equalsIgnoreCase("[Everyone]")) return(true);
 		local = getLocalizedEveryone();
 		if(local != null) if(groupName.equalsIgnoreCase(local)) return(true);
@@ -477,7 +476,7 @@ public abstract class PluginCore extends JavaPlugin{
 			if(local != null) if(groupName.equalsIgnoreCase(local)) return(true);
 			//if(groupName.equalsIgnoreCase(Lockette.altOperators)) return(true);
 		}
-		
+
 		if(!usingExternalGroups()) return(false);
 		
 		
@@ -556,10 +555,30 @@ public abstract class PluginCore extends JavaPlugin{
 					if(pProfile.getParty().getName().equalsIgnoreCase(groupName.substring(1, end))) return(true);
 				}
 			}
-			
+
 			if(linkFactions.isEnabled()) if(player != null){
-				String		tag = linkFactions.getFactions().getPlayerFactionTag(player);
-				
+				Object obj = linkFactions.getFactions();
+				Class klass = obj.getClass();
+				String tag = null;
+				try {
+					switch (klass.getSimpleName()) {
+					case "P":
+						Method m = klass.getMethod("getPlayerFactionTag", new Class[]{Player.class});
+						tag = (String) m.invoke(obj, new Object[] {player});
+						break;
+					case "Factions":
+						Class kklass = Class.forName("com.massivecraft.factions.entity.MPlayer");
+						Method m1 = kklass.getMethod("get", new Class[]{Object.class});
+						Object mp = m1.invoke(null, new Object[] {player});
+						Method m2 = kklass.getMethod("getFactionName", new Class[]{});
+						tag = (String) m2.invoke(mp, new Object[]{});
+						break;
+					}
+				} catch (Exception e) {
+					tag = null;
+					e.printStackTrace();
+				}
+				tag = ChatColor.stripColor(tag);
 				if(tag != null){
 					if(tag.equalsIgnoreCase(groupName.substring(1, end))) return(true);
 				}
@@ -720,23 +739,23 @@ public abstract class PluginCore extends JavaPlugin{
 		if(message == null) return;
 		if(message.isEmpty()) return;
 		
-		Player[]	players = getServer().getOnlinePlayers();
+		Collection<Player>	players = (Collection<Player>)getServer().getOnlinePlayers();
 		
 		if(target.charAt(0) == '['){
 			// For groups.
-			for(int x = 0; x < players.length; ++x){
-				if(inGroup(players[x].getWorld(), players[x], target)){
+			for(Player p : players) {
+				if(inGroup(p.getWorld(), p, target)){
 					// Send the message.
-					players[x].sendMessage(message);
+					p.sendMessage(message);
 				}
 			}
 		}
 		else{
 			// For player names.
-			for(int x = 0; x < players.length; ++x){
-				if(target.equalsIgnoreCase(players[x].getName())){
+			for(Player p : players) {
+				if(target.equalsIgnoreCase(p.getName())){
 					// Send the message.
-					players[x].sendMessage(message);
+					p.sendMessage(message);
 				}
 			}
 		}
@@ -745,14 +764,14 @@ public abstract class PluginCore extends JavaPlugin{
 	
 	public boolean playerOnline(String truncName){
 		String		text = truncName.replaceAll("(?i)\u00A7[0-F]", "");
-		Player[]	players = getServer().getOnlinePlayers();
+		Collection<Player>	players = (Collection<Player>)getServer().getOnlinePlayers();
 		int			length;
 		
-		for(int x = 0; x < players.length; ++x){
-			length = players[x].getName().length();
+		for(Player p : players) {
+			length = p.getName().length();
 			if(length > 15) length = 15;
 			
-			if(text.equals(players[x].getName().substring(0, length))) return(true);
+			if(text.equals(p.getName().substring(0, length))) return(true);
 		}
 		
 		return(false);
