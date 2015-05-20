@@ -14,7 +14,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-            <version>1.8.3-R0.1-SNAPSHOT</version>
+            <version>LATEST</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -150,13 +150,15 @@
 		</resources>
 	</build>
 	<repositories>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public</url>
-		</repository>
-		<repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-		</repository>
+      <repository>
+        <id>spigot-repo</id>
+        <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+      </repository>
+      <!--
+          <repository>
+		  <id>bukkit-repo</id>
+		  <url>http://repo.bukkit.org/content/groups/public</url>
+	      </repository>
+      -->
 	</repositories>
 </project>
